@@ -1,0 +1,94 @@
+.ladder-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-desc {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.ladder-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.ladder-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.ladder-table thead tr {
+  background-color: #1a472a;
+  color: #f5c518;
+}
+
+.ladder-table th {
+  padding: 0.85rem 0.75rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ladder-table th.team-col {
+  text-align: left;
+}
+
+.ladder-table td {
+  padding: 0.7rem 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ladder-table .team-name-cell {
+  text-align: left;
+  font-weight: 600;
+}
+
+.ladder-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ladder-table tbody tr:hover {
+  background-color: #f9f5e0;
+}
+
+.finals-zone {
+  background-color: #f0fff4;
+}
+
+.finals-zone:hover {
+  background-color: #d4f0df !important;
+}
+
+.rank-cell {
+  font-weight: 700;
+  color: #1a472a;
+  width: 36px;
+}
+
+.win-cell {
+  color: #1a7a3c;
+  font-weight: 700;
+}
+
+.loss-cell {
+  color: #cc2031;
+  font-weight: 700;
+}
+
+.pts-cell {
+  font-weight: 800;
+  color: #1a472a;
+}
+
+.finals-note {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #555;
+}

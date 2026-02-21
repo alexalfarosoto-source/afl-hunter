@@ -1,0 +1,122 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.hero {
+  background: linear-gradient(135deg, #1a472a 0%, #2d6a4f 60%, #f5c518 100%);
+  border-radius: 12px;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #f5c518;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+}
+
+.hero-desc {
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: inline-block;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.btn-primary {
+  background-color: #f5c518;
+  color: #1a472a;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #f5c518;
+  border: 2px solid #f5c518;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-top: 4px solid #1a472a;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card h3 {
+  font-size: 1.2rem;
+  color: #1a472a;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.feature-link {
+  color: #1a472a;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 2px solid #f5c518;
+  padding-bottom: 1px;
+  transition: color 0.2s;
+}
+
+.feature-link:hover {
+  color: #f5c518;
+}
