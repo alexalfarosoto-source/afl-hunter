@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AFL Hunter – Junior Footy</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #003087;
+        color: #fff;
+        min-height: 100vh;
+      }
+
+      /* ── Header ────────────────────────────────────────── */
+      header {
+        background: #002060;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 4px solid #FFD700;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+      }
+
+      header h1 span { color: #FFD700; }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.2s;
+      }
+
+      nav a:hover, nav a:focus {
+        color: #FFD700;
+        outline: 2px solid #FFD700;
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      /* ── Hero ───────────────────────────────────────────── */
+      .hero {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #003087 0%, #0050bf 100%);
+      }
+
+      .hero h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        opacity: 0.9;
+      }
+
+      .hero a.btn {
+        display: inline-block;
+        background: #FFD700;
+        color: #002060;
+        font-weight: bold;
+        padding: 0.75rem 2rem;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+
+      .hero a.btn:hover, .hero a.btn:focus {
+        background: #e6c200;
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      /* ── Main content ───────────────────────────────────── */
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+
+      /* ── Teams section ──────────────────────────────────── */
+      .section-title {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+        border-left: 5px solid #FFD700;
+        padding-left: 0.75rem;
+      }
+
+      .teams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 3rem;
+      }
+
+      .team-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 1.25rem;
+        text-align: center;
+        transition: transform 0.2s, background 0.2s;
+      }
+
+      .team-card:hover, .team-card:focus-within {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .team-card h3 { font-size: 1rem; margin-top: 0.5rem; }
+
+      .team-emoji { font-size: 2.5rem; display: block; }
+
+      /* ── Ladder section ─────────────────────────────────── */
+      .ladder-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 3rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .ladder-table th, .ladder-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+      }
+
+      .ladder-table thead tr { background: rgba(0, 0, 0, 0.3); }
+
+      .ladder-table thead th { color: #FFD700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+      .ladder-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.05); }
+
+      .ladder-table tbody tr:hover { background: rgba(255, 255, 255, 0.12); }
+
+      /* ── Footer ─────────────────────────────────────────── */
+      footer {
+        background: #002060;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 0.85rem;
+        border-top: 4px solid #FFD700;
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Header / Navigation ── -->
+    <header>
+      <h1>AFL <span>Hunter</span></h1>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="#teams">Teams</a></li>
+          <li><a href="#ladder">Ladder</a></li>
+          <li><a href="#fixtures">Fixtures</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ── Hero ── -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <h2 id="hero-heading">Welcome to AFL Hunter Junior Footy</h2>
+      <p>Your hub for junior AFL teams, live ladder standings, and upcoming fixtures.</p>
+      <a href="#teams" class="btn">Explore Teams</a>
+    </section>
+
+    <!-- ── Main content ── -->
+    <main>
+      <!-- Teams -->
+      <section id="teams" aria-labelledby="teams-heading">
+        <h2 class="section-title" id="teams-heading">Junior Teams</h2>
+        <ul class="teams-grid" role="list">
+          <li class="team-card">
+            <span class="team-emoji" aria-hidden="true">🦁</span>
+            <h3>Hunter Lions</h3>
+          </li>
+          <li class="team-card">
+            <span class="team-emoji" aria-hidden="true">🦅</span>
+            <h3>Valley Eagles</h3>
+          </li>
+          <li class="team-card">
+            <span class="team-emoji" aria-hidden="true">🐯</span>
+            <h3>Ridge Tigers</h3>
+          </li>
+          <li class="team-card">
+            <span class="team-emoji" aria-hidden="true">🐊</span>
+            <h3>River Crocs</h3>
+          </li>
+          <li class="team-card">
+            <span class="team-emoji" aria-hidden="true">🦊</span>
+            <h3>Park Foxes</h3>
+          </li>
+          <li class="team-card">
+            <span class="team-emoji" aria-hidden="true">⚡</span>
+            <h3>Storm FC</h3>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Ladder -->
+      <section id="ladder" aria-labelledby="ladder-heading">
+        <h2 class="section-title" id="ladder-heading">Ladder</h2>
+        <table class="ladder-table" aria-label="Current season ladder">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Team</th>
+              <th scope="col">W</th>
+              <th scope="col">L</th>
+              <th scope="col">D</th>
+              <th scope="col">Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Hunter Lions</td>
+              <td>8</td>
+              <td>2</td>
+              <td>0</td>
+              <td>32</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Valley Eagles</td>
+              <td>7</td>
+              <td>3</td>
+              <td>0</td>
+              <td>28</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Ridge Tigers</td>
+              <td>6</td>
+              <td>3</td>
+              <td>1</td>
+              <td>26</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>River Crocs</td>
+              <td>5</td>
+              <td>5</td>
+              <td>0</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Park Foxes</td>
+              <td>3</td>
+              <td>6</td>
+              <td>1</td>
+              <td>14</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Storm FC</td>
+              <td>1</td>
+              <td>9</td>
+              <td>0</td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Fixtures -->
+      <section id="fixtures" aria-labelledby="fixtures-heading">
+        <h2 class="section-title" id="fixtures-heading">Upcoming Fixtures</h2>
+        <table class="ladder-table" aria-label="Upcoming fixtures">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Home</th>
+              <th scope="col">Away</th>
+              <th scope="col">Venue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><time datetime="2026-03-01">1 Mar 2026</time></td>
+              <td>Hunter Lions</td>
+              <td>Valley Eagles</td>
+              <td>Hunter Oval</td>
+            </tr>
+            <tr>
+              <td><time datetime="2026-03-01">1 Mar 2026</time></td>
+              <td>Ridge Tigers</td>
+              <td>Storm FC</td>
+              <td>Ridge Reserve</td>
+            </tr>
+            <tr>
+              <td><time datetime="2026-03-08">8 Mar 2026</time></td>
+              <td>River Crocs</td>
+              <td>Park Foxes</td>
+              <td>River Park</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer>
+      <p>&copy; 2026 AFL Hunter Junior Footy. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
