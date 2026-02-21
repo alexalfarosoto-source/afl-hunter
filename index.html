@@ -1,324 +1,828 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AFL Hunter – Junior Footy</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AFL HUNTER | THE ARISE SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --sys-blue: #38bdf8;
+            --sys-red: #ef4444;
+            --sys-purple: #a855f7;
+            --sys-yellow: #fbbf24;
+            --sys-green: #22c55e;
+            --bg: #020617;
+            --surface: rgba(15, 23, 42, 0.97);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+        
+        
+        .app { position: relative; z-index: 1; max-width: 420px; margin: 0 auto; padding: 16px 16px 100px; }
 
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #003087;
-        color: #fff;
-        min-height: 100vh;
-      }
+        /* HEADER */
+        .header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; padding-top:8px; }
+        .sys-title { font-family:'Orbitron',sans-serif; font-size:22px; font-weight:900; font-style:italic; letter-spacing:-1px; color:var(--sys-blue); text-shadow:0 0 20px rgba(56,189,248,0.8),0 0 40px rgba(56,189,248,0.4); position:relative; }
+        .sys-title::after { content:'AFL HUNTER'; position:absolute; top:-12px; left:0; font-size:8px; letter-spacing:4px; color:rgba(56,189,248,0.5); font-style:normal; font-weight:400; }
+        .rank-badge { font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(56,189,248,0.6); text-transform:uppercase; letter-spacing:2px; margin-top:4px; }
+        .pb-label { font-size:8px; color:rgba(251,191,36,0.6); letter-spacing:3px; font-family:'Share Tech Mono',monospace; text-align:right; }
+        .pb-value { font-family:'Orbitron',sans-serif; font-size:20px; font-weight:900; color:var(--sys-yellow); text-shadow:0 0 15px rgba(251,191,36,0.6); text-align:right; }
 
-      /* ── Header ────────────────────────────────────────── */
-      header {
-        background: #002060;
-        padding: 1rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 4px solid #FFD700;
-      }
+        /* NAV */
+        .nav { display:flex; gap:4px; margin-bottom:20px; background:rgba(15,23,42,0.8); padding:4px; border-radius:12px; border:1px solid rgba(56,189,248,0.15); }
+        .tab-btn { flex:1; padding:8px 2px; border:none; background:transparent; color:rgba(148,163,184,0.6); font-family:'Orbitron',sans-serif; font-size:6.5px; letter-spacing:0.5px; text-transform:uppercase; border-radius:8px; cursor:pointer; transition:all 0.2s; }
+        .tab-btn.active { background:var(--sys-blue); color:#020617; font-weight:700; box-shadow:0 0 12px rgba(56,189,248,0.5); }
 
-      header h1 {
-        font-size: 1.8rem;
-        letter-spacing: 1px;
-      }
+        /* GLASS */
+        .glass { background:var(--surface); border:1.5px solid rgba(56,189,248,0.35); border-radius:20px; box-shadow:0 0 30px rgba(56,189,248,0.1),inset 0 1px 0 rgba(255,255,255,0.05); }
 
-      header h1 span { color: #FFD700; }
+        /* TIMER */
+        .timer-window { padding:24px 20px; text-align:center; transition:all 0.4s ease; position:relative; overflow:hidden; }
+        .timer-window::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--sys-blue),transparent); opacity:0.5; }
+        .gear-label { font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(148,163,184,0.5); letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; min-height:14px; }
+        .timer-display { font-family:'Orbitron',sans-serif; font-size:76px; font-weight:900; letter-spacing:-4px; line-height:1; margin-bottom:20px; color:white; text-shadow:0 0 30px rgba(255,255,255,0.2); transition:color 0.3s,text-shadow 0.3s; }
+        .timer-display.running { color:var(--sys-green); text-shadow:0 0 30px rgba(34,197,94,0.5); animation:timerPulse 0.5s ease-in-out infinite alternate; }
+        @keyframes timerPulse { from{text-shadow:0 0 20px rgba(34,197,94,0.3)}to{text-shadow:0 0 50px rgba(34,197,94,0.8)} }
+        .timer-window.gear-2nd { border-color:var(--sys-red)!important; box-shadow:0 0 40px rgba(239,68,68,0.4),inset 0 0 60px rgba(239,68,68,0.05)!important; }
+        .timer-window.gear-2nd .gear-label { color:var(--sys-red); }
+        .timer-window.gear-2nd .timer-display { color:var(--sys-red); text-shadow:0 0 30px rgba(239,68,68,0.6); }
+        .timer-window.gear-4th { border-color:var(--sys-purple)!important; box-shadow:0 0 50px rgba(168,85,247,0.5),inset 0 0 80px rgba(168,85,247,0.08)!important; animation:gear4Pulse 0.8s ease-in-out infinite alternate; }
+        @keyframes gear4Pulse { from{box-shadow:0 0 40px rgba(168,85,247,0.4)}to{box-shadow:0 0 70px rgba(168,85,247,0.7)} }
+        .timer-window.gear-4th .gear-label { color:var(--sys-purple); }
+        .timer-window.gear-4th .timer-display { color:var(--sys-purple); text-shadow:0 0 30px rgba(168,85,247,0.8); }
 
-      nav ul {
-        list-style: none;
-        display: flex;
-        gap: 1.5rem;
-      }
+        /* BUTTONS */
+        .action-btn { width:100%; padding:14px; border:none; border-radius:14px; background:var(--sys-yellow); color:#020617; font-family:'Orbitron',sans-serif; font-size:15px; font-weight:900; font-style:italic; letter-spacing:1px; text-transform:uppercase; cursor:pointer; border-bottom:4px solid #92400e; transition:all 0.1s; box-shadow:0 4px 20px rgba(251,191,36,0.3); }
+        .action-btn:active { border-bottom-width:0; transform:translateY(3px); }
+        .action-btn.waiting { background:linear-gradient(135deg,#1e293b,#0f172a); color:var(--sys-blue); border-color:var(--sys-blue); border-style:solid; border-bottom-width:2px; animation:waitFlicker 0.3s ease-in-out infinite alternate; }
+        @keyframes waitFlicker { from{opacity:0.8}to{opacity:1} }
+        .action-btn.running { background:linear-gradient(135deg,#ef4444,#dc2626); color:white; border-color:#7f1d1d; box-shadow:0 4px 20px rgba(239,68,68,0.4); }
+        .save-btn { width:100%; margin-top:10px; padding:10px; border:1.5px solid var(--sys-blue); border-radius:10px; background:transparent; color:var(--sys-blue); font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:2px; font-weight:700; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+        .save-btn.hidden { display:none; }
 
-      nav a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.2s;
-      }
+        /* BEEP */
+        .beep-card { padding:14px 16px; margin-top:14px; }
+        .beep-title { font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:3px; color:rgba(56,189,248,0.6); text-transform:uppercase; text-align:center; margin-bottom:10px; }
+        .beep-row { display:flex; align-items:center; justify-content:space-between; }
+        .beep-level { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; }
+        .beep-level span { color:var(--sys-yellow); font-size:20px; }
+        .beep-btn { padding:9px 16px; background:var(--sys-red); border:none; border-radius:8px; color:white; font-family:'Orbitron',sans-serif; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; box-shadow:0 0 15px rgba(239,68,68,0.3); transition:all 0.2s; }
+        .beep-btn.active-beep { background:#22c55e; box-shadow:0 0 20px rgba(34,197,94,0.4); }
 
-      nav a:hover, nav a:focus {
-        color: #FFD700;
-        outline: 2px solid #FFD700;
-        outline-offset: 2px;
-        border-radius: 2px;
-      }
+        /* SECTION DIVIDER */
+        .section-divider { font-family:'Orbitron',sans-serif; font-size:8px; letter-spacing:4px; color:rgba(56,189,248,0.5); text-transform:uppercase; text-align:center; margin:18px 0 12px; display:flex; align-items:center; gap:8px; }
+        .section-divider::before,.section-divider::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(56,189,248,0.3),transparent); }
 
-      /* ── Hero ───────────────────────────────────────────── */
-      .hero {
-        text-align: center;
-        padding: 4rem 2rem;
-        background: linear-gradient(135deg, #003087 0%, #0050bf 100%);
-      }
+        /* DRILL CARDS */
+        .drill-card { background:rgba(15,23,42,0.9); border-radius:16px; border:1px solid rgba(56,189,248,0.2); margin-bottom:10px; overflow:hidden; }
+        .drill-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px; }
+        .drill-anime { font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:2px; text-transform:uppercase; margin-bottom:2px; opacity:0.7; }
+        .drill-name { font-family:'Orbitron',sans-serif; font-size:11px; font-weight:900; font-style:italic; text-transform:uppercase; letter-spacing:0.5px; }
+        .drill-sub { font-size:10px; color:rgba(148,163,184,0.6); margin-top:3px; font-family:'Share Tech Mono',monospace; }
 
-      .hero h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-      }
+        /* DIFFICULTY SELECTOR */
+        .diff-selector { display:flex; gap:4px; margin:0 14px 10px; }
+        .diff-btn { flex:1; padding:6px 4px; border:1px solid rgba(255,255,255,0.1); border-radius:6px; background:transparent; color:rgba(148,163,184,0.5); font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:0.5px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; text-align:center; line-height:1.4; }
+        .diff-btn.sel { font-weight:700; color:#020617; }
 
-      .hero p {
-        font-size: 1.2rem;
-        max-width: 600px;
-        margin: 0 auto 2rem;
-        opacity: 0.9;
-      }
+        /* COUNTER */
+        .counter-row { display:flex; align-items:center; justify-content:space-between; padding:6px 14px 12px; }
+        .counter-target { font-size:10px; color:rgba(148,163,184,0.4); font-family:'Share Tech Mono',monospace; margin-bottom:4px; }
+        .counter-controls { display:flex; align-items:center; gap:10px; }
+        .counter-val { font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; min-width:50px; text-align:center; transition:transform 0.1s; }
+        .counter-val.flash { animation:cflash 0.4s ease; }
+        @keyframes cflash { 0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1)} }
+        .c-btn { width:38px; height:38px; border:none; border-radius:50%; font-size:20px; font-weight:900; cursor:pointer; transition:all 0.1s; display:flex; align-items:center; justify-content:center; }
+        .c-btn:active { transform:scale(0.88); }
+        .c-minus { background:rgba(239,68,68,0.15); color:var(--sys-red); border:1px solid rgba(239,68,68,0.3); }
+        .c-plus { background:rgba(34,197,94,0.15); color:var(--sys-green); border:1px solid rgba(34,197,94,0.3); }
+        .c-reset { font-size:10px; color:rgba(148,163,184,0.35); border:1px solid rgba(148,163,184,0.15); background:transparent; cursor:pointer; padding:4px 8px; border-radius:6px; font-family:'Share Tech Mono',monospace; letter-spacing:1px; transition:all 0.2s; }
+        .c-reset:hover { color:rgba(148,163,184,0.7); }
+        .progress-bar-wrap { height:3px; background:rgba(255,255,255,0.07); margin:0 14px 10px; border-radius:4px; overflow:hidden; }
+        .progress-bar-fill { height:100%; border-radius:4px; transition:width 0.3s ease; }
 
-      .hero a.btn {
-        display: inline-block;
-        background: #FFD700;
-        color: #002060;
-        font-weight: bold;
-        padding: 0.75rem 2rem;
-        border-radius: 4px;
-        text-decoration: none;
-        transition: background 0.2s;
-      }
+        /* SKILL TREE TAB */
+        .skill-solo { background:rgba(15,23,42,0.9); border-radius:14px; border:1px solid rgba(56,189,248,0.18); margin-bottom:10px; overflow:hidden; }
+        .skill-solo-header { display:flex; align-items:center; gap:10px; padding:12px 14px 6px; }
+        .skill-icon { font-size:22px; }
+        .skill-solo-text { flex:1; }
+        .skill-solo-anime { font-family:'Orbitron',sans-serif; font-size:7px; letter-spacing:2px; color:rgba(148,163,184,0.4); text-transform:uppercase; }
+        .skill-solo-name { font-family:'Orbitron',sans-serif; font-size:11px; font-weight:900; font-style:italic; color:var(--sys-yellow); text-transform:uppercase; letter-spacing:0.5px; }
+        .skill-total-box { text-align:right; }
+        .skill-total-label { font-family:'Share Tech Mono',monospace; font-size:7px; color:rgba(148,163,184,0.3); letter-spacing:2px; }
+        .skill-total-val { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:900; color:var(--sys-blue); }
+        .skill-solo-desc { font-size:11px; color:rgba(148,163,184,0.65); line-height:1.4; padding:2px 14px 10px; }
 
-      .hero a.btn:hover, .hero a.btn:focus {
-        background: #e6c200;
-        outline: 2px solid #fff;
-        outline-offset: 2px;
-      }
+        /* HISTORY */
+        .log-item { display:flex; justify-content:space-between; align-items:center; background:rgba(15,23,42,0.8); padding:10px 14px; border-radius:10px; margin-bottom:8px; border-left:2px solid var(--sys-blue); }
+        .log-item.gold { border-color:var(--sys-yellow); }
+        .trial-name { color:rgba(148,163,184,0.7); font-family:'Share Tech Mono',monospace; font-size:10px; }
+        .trial-time { font-family:'Orbitron',sans-serif; font-weight:700; font-size:16px; }
+        .trial-time.gold { color:var(--sys-yellow); text-shadow:0 0 10px rgba(251,191,36,0.4); }
+        .trial-gear { font-size:9px; color:rgba(148,163,184,0.5); font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+        .no-data { text-align:center; color:rgba(148,163,184,0.3); font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; padding:40px 0; }
 
-      /* ── Main content ───────────────────────────────────── */
-      main {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
-      }
+        /* ROSTER */
+        .roster-card { background:rgba(15,23,42,0.9); border-radius:14px; border:1px solid rgba(56,189,248,0.15); overflow:hidden; }
+        .roster-day { display:flex; align-items:flex-start; gap:12px; padding:13px 16px; border-bottom:1px solid rgba(255,255,255,0.04); }
+        .roster-day:last-child { border-bottom:none; }
+        .day-tag { font-family:'Orbitron',sans-serif; font-size:9px; font-weight:700; min-width:30px; letter-spacing:1px; padding-top:2px; }
+        .day-title { font-size:13px; font-weight:600; color:white; }
+        .day-sub { font-size:11px; color:rgba(148,163,184,0.6); margin-top:2px; }
+        .game-day { margin-top:14px; background:linear-gradient(135deg,var(--sys-yellow),#f59e0b); padding:14px 16px; border-radius:14px; text-align:center; }
+        .game-day-text { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:900; font-style:italic; color:#020617; letter-spacing:1px; }
+        .game-day-sub { font-size:10px; color:rgba(2,6,23,0.6); margin-top:2px; letter-spacing:2px; font-family:'Share Tech Mono',monospace; }
 
-      /* ── Teams section ──────────────────────────────────── */
-      .section-title {
-        font-size: 1.6rem;
-        margin-bottom: 1.5rem;
-        border-left: 5px solid #FFD700;
-        padding-left: 0.75rem;
-      }
+        .section-title { font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:4px; color:rgba(56,189,248,0.6); text-align:center; text-transform:uppercase; margin-bottom:16px; }
+        .hidden { display:none!important; }
 
-      .teams-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 3rem;
-      }
-
-      .team-card {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 1.25rem;
-        text-align: center;
-        transition: transform 0.2s, background 0.2s;
-      }
-
-      .team-card:hover, .team-card:focus-within {
-        transform: translateY(-4px);
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      .team-card h3 { font-size: 1rem; margin-top: 0.5rem; }
-
-      .team-emoji { font-size: 2.5rem; display: block; }
-
-      /* ── Ladder section ─────────────────────────────────── */
-      .ladder-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 3rem;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-
-      .ladder-table th, .ladder-table td {
-        padding: 0.75rem 1rem;
-        text-align: left;
-      }
-
-      .ladder-table thead tr { background: rgba(0, 0, 0, 0.3); }
-
-      .ladder-table thead th { color: #FFD700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-
-      .ladder-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.05); }
-
-      .ladder-table tbody tr:hover { background: rgba(255, 255, 255, 0.12); }
-
-      /* ── Footer ─────────────────────────────────────────── */
-      footer {
-        background: #002060;
-        text-align: center;
-        padding: 1.5rem;
-        font-size: 0.85rem;
-        border-top: 4px solid #FFD700;
-        opacity: 0.85;
-      }
+        /* BEEP MODAL */
+        .modal-overlay { position:fixed; inset:0; background:rgba(2,6,23,0.92); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; }
+        .modal-overlay.hidden { display:none!important; }
+        .modal { background:rgba(15,23,42,0.99); border:2px solid var(--sys-red); border-radius:20px; padding:28px 24px; text-align:center; box-shadow:0 0 60px rgba(239,68,68,0.3); max-width:320px; width:100%; }
+        .modal-title { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:900; color:var(--sys-red); text-shadow:0 0 20px rgba(239,68,68,0.6); margin-bottom:8px; }
+        .modal-level { font-family:'Orbitron',sans-serif; font-size:60px; font-weight:900; color:var(--sys-yellow); text-shadow:0 0 30px rgba(251,191,36,0.6); line-height:1; margin:16px 0; }
+        .modal-sub { font-size:11px; color:rgba(148,163,184,0.6); font-family:'Share Tech Mono',monospace; letter-spacing:2px; margin-bottom:20px; }
+        .modal-progress { height:4px; background:rgba(255,255,255,0.1); border-radius:4px; margin-bottom:20px; overflow:hidden; }
+        .modal-progress-bar { height:100%; background:var(--sys-red); border-radius:4px; transition:width 0.5s; box-shadow:0 0 8px var(--sys-red); }
+        .modal-close { width:100%; padding:12px; background:transparent; border:1.5px solid rgba(148,163,184,0.3); border-radius:10px; color:rgba(148,163,184,0.6); font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:2px; cursor:pointer; transition:all 0.2s; }
+        .modal-close:hover { border-color:var(--sys-red); color:var(--sys-red); }
+        .shuttle-indicator { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; }
+        .shuttle-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.3s; }
+        .shuttle-dot.active { background:var(--sys-red); box-shadow:0 0 10px var(--sys-red); transform:scale(1.5); }
     </style>
-  </head>
-  <body>
-    <!-- ── Header / Navigation ── -->
-    <header>
-      <h1>AFL <span>Hunter</span></h1>
-      <nav aria-label="Main navigation">
-        <ul>
-          <li><a href="#teams">Teams</a></li>
-          <li><a href="#ladder">Ladder</a></li>
-          <li><a href="#fixtures">Fixtures</a></li>
-        </ul>
-      </nav>
-    </header>
+</head>
+<body>
+<canvas id="lightning-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+<div class="app">
 
-    <!-- ── Hero ── -->
-    <section class="hero" aria-labelledby="hero-heading">
-      <h2 id="hero-heading">Welcome to AFL Hunter Junior Footy</h2>
-      <p>Your hub for junior AFL teams, live ladder standings, and upcoming fixtures.</p>
-      <a href="#teams" class="btn">Explore Teams</a>
-    </section>
+    <!-- HEADER -->
+    <div class="header">
+        <div>
+            <div class="sys-title">ARISE SYSTEM</div>
+            <div class="rank-badge" style="margin-top:16px;">RANK: S-PROSPECT</div>
+        </div>
+        <div>
+            <div class="pb-label">PERSONAL BEST</div>
+            <div class="pb-value" id="pb-display">—</div>
+        </div>
+    </div>
 
-    <!-- ── Main content ── -->
-    <main>
-      <!-- Teams -->
-      <section id="teams" aria-labelledby="teams-heading">
-        <h2 class="section-title" id="teams-heading">Junior Teams</h2>
-        <ul class="teams-grid" role="list">
-          <li class="team-card">
-            <span class="team-emoji" aria-hidden="true">🦁</span>
-            <h3>Hunter Lions</h3>
-          </li>
-          <li class="team-card">
-            <span class="team-emoji" aria-hidden="true">🦅</span>
-            <h3>Valley Eagles</h3>
-          </li>
-          <li class="team-card">
-            <span class="team-emoji" aria-hidden="true">🐯</span>
-            <h3>Ridge Tigers</h3>
-          </li>
-          <li class="team-card">
-            <span class="team-emoji" aria-hidden="true">🐊</span>
-            <h3>River Crocs</h3>
-          </li>
-          <li class="team-card">
-            <span class="team-emoji" aria-hidden="true">🦊</span>
-            <h3>Park Foxes</h3>
-          </li>
-          <li class="team-card">
-            <span class="team-emoji" aria-hidden="true">⚡</span>
-            <h3>Storm FC</h3>
-          </li>
-        </ul>
-      </section>
+    <!-- NAV -->
+    <div class="nav">
+        <button class="tab-btn active" id="t-btn" onclick="showTab('training')">TRAINING</button>
+        <button class="tab-btn" id="sk-btn" onclick="showTab('skills')">SKILLS</button>
+        <button class="tab-btn" id="h-btn" onclick="showTab('history')">LOGS</button>
+        <button class="tab-btn" id="s-btn" onclick="showTab('schedule')">ROSTER</button>
+    </div>
 
-      <!-- Ladder -->
-      <section id="ladder" aria-labelledby="ladder-heading">
-        <h2 class="section-title" id="ladder-heading">Ladder</h2>
-        <table class="ladder-table" aria-label="Current season ladder">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Team</th>
-              <th scope="col">W</th>
-              <th scope="col">L</th>
-              <th scope="col">D</th>
-              <th scope="col">Pts</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Hunter Lions</td>
-              <td>8</td>
-              <td>2</td>
-              <td>0</td>
-              <td>32</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Valley Eagles</td>
-              <td>7</td>
-              <td>3</td>
-              <td>0</td>
-              <td>28</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Ridge Tigers</td>
-              <td>6</td>
-              <td>3</td>
-              <td>1</td>
-              <td>26</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>River Crocs</td>
-              <td>5</td>
-              <td>5</td>
-              <td>0</td>
-              <td>20</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Park Foxes</td>
-              <td>3</td>
-              <td>6</td>
-              <td>1</td>
-              <td>14</td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>Storm FC</td>
-              <td>1</td>
-              <td>9</td>
-              <td>0</td>
-              <td>4</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+    <!-- ============ TRAINING TAB ============ -->
+    <div id="tab-training">
 
-      <!-- Fixtures -->
-      <section id="fixtures" aria-labelledby="fixtures-heading">
-        <h2 class="section-title" id="fixtures-heading">Upcoming Fixtures</h2>
-        <table class="ladder-table" aria-label="Upcoming fixtures">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Home</th>
-              <th scope="col">Away</th>
-              <th scope="col">Venue</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><time datetime="2026-03-01">1 Mar 2026</time></td>
-              <td>Hunter Lions</td>
-              <td>Valley Eagles</td>
-              <td>Hunter Oval</td>
-            </tr>
-            <tr>
-              <td><time datetime="2026-03-01">1 Mar 2026</time></td>
-              <td>Ridge Tigers</td>
-              <td>Storm FC</td>
-              <td>Ridge Reserve</td>
-            </tr>
-            <tr>
-              <td><time datetime="2026-03-08">8 Mar 2026</time></td>
-              <td>River Crocs</td>
-              <td>Park Foxes</td>
-              <td>River Park</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </main>
+        <!-- SPRINT TIMER -->
+        <div class="glass timer-window" id="main-window">
+            <div class="gear-label" id="gear-label">◈ BASE FORM ◈</div>
+            <div class="timer-display" id="timer">0.00</div>
+            <button class="action-btn" id="action-btn">⚡ Initialize Burst</button>
+            <button class="save-btn hidden" id="save-btn">◎ Record to System</button>
+        </div>
 
-    <!-- ── Footer ── -->
-    <footer>
-      <p>&copy; 2026 AFL Hunter Junior Footy. All rights reserved.</p>
-    </footer>
-  </body>
+        <div class="section-divider">Skill Drills</div>
+
+        <!-- GULDEN LEFT -->
+        <div class="drill-card" style="border-color:rgba(251,191,36,0.3)">
+            <div class="drill-header">
+                <div>
+                    <div class="drill-anime" style="color:var(--sys-yellow)">Errol Gulden</div>
+                    <div class="drill-name" style="color:var(--sys-yellow)">⚡ Laser Kick — LEFT FOOT</div>
+                    <div class="drill-sub">Short drop · snap through · 30m precision target</div>
+                </div>
+            </div>
+            <div class="diff-selector" id="diffs-gl">
+                <button class="diff-btn sel" style="background:var(--sys-green);border-color:var(--sys-green)" onclick="setDiff('gl',0,this)">BEGINNER<br><small style="font-size:6px">10 kicks</small></button>
+                <button class="diff-btn" onclick="setDiff('gl',1,this)">RISING<br><small style="font-size:6px">20 kicks</small></button>
+                <button class="diff-btn" onclick="setDiff('gl',2,this)">ELITE<br><small style="font-size:6px">30 kicks</small></button>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill-gl" style="width:0%;background:var(--sys-yellow)"></div></div>
+            <div class="counter-row">
+                <div><div class="counter-target" id="ctgt-gl">TARGET: 10</div><button class="c-reset" onclick="resetD('gl')">RESET</button></div>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeD('gl',-1)">−</button>
+                    <div class="counter-val" id="cval-gl" style="color:var(--sys-yellow)">0</div>
+                    <button class="c-btn c-plus" onclick="changeD('gl',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GULDEN RIGHT -->
+        <div class="drill-card" style="border-color:rgba(251,191,36,0.3)">
+            <div class="drill-header">
+                <div>
+                    <div class="drill-anime" style="color:var(--sys-yellow)">Errol Gulden</div>
+                    <div class="drill-name" style="color:var(--sys-yellow)">⚡ Laser Kick — RIGHT FOOT</div>
+                    <div class="drill-sub">Short drop · snap through · 30m precision target</div>
+                </div>
+            </div>
+            <div class="diff-selector" id="diffs-gr">
+                <button class="diff-btn sel" style="background:var(--sys-green);border-color:var(--sys-green)" onclick="setDiff('gr',0,this)">BEGINNER<br><small style="font-size:6px">10 kicks</small></button>
+                <button class="diff-btn" onclick="setDiff('gr',1,this)">RISING<br><small style="font-size:6px">20 kicks</small></button>
+                <button class="diff-btn" onclick="setDiff('gr',2,this)">ELITE<br><small style="font-size:6px">30 kicks</small></button>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill-gr" style="width:0%;background:var(--sys-yellow)"></div></div>
+            <div class="counter-row">
+                <div><div class="counter-target" id="ctgt-gr">TARGET: 10</div><button class="c-reset" onclick="resetD('gr')">RESET</button></div>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeD('gr',-1)">−</button>
+                    <div class="counter-val" id="cval-gr" style="color:var(--sys-yellow)">0</div>
+                    <button class="c-btn c-plus" onclick="changeD('gr',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CURNOW MARKS -->
+        <div class="drill-card" style="border-color:rgba(56,189,248,0.3)">
+            <div class="drill-header">
+                <div>
+                    <div class="drill-anime" style="color:var(--sys-blue)">Charlie Curnow</div>
+                    <div class="drill-name" style="color:var(--sys-blue)">👑 King Mark</div>
+                    <div class="drill-sub">Knee drive hard · attack the highest point · lock it in</div>
+                </div>
+            </div>
+            <div class="diff-selector" id="diffs-cm">
+                <button class="diff-btn sel" style="background:var(--sys-green);border-color:var(--sys-green)" onclick="setDiff('cm',0,this)">BEGINNER<br><small style="font-size:6px">10 marks</small></button>
+                <button class="diff-btn" onclick="setDiff('cm',1,this)">RISING<br><small style="font-size:6px">20 marks</small></button>
+                <button class="diff-btn" onclick="setDiff('cm',2,this)">ELITE<br><small style="font-size:6px">30 marks</small></button>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill-cm" style="width:0%;background:var(--sys-blue)"></div></div>
+            <div class="counter-row">
+                <div><div class="counter-target" id="ctgt-cm">TARGET: 10</div><button class="c-reset" onclick="resetD('cm')">RESET</button></div>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeD('cm',-1)">−</button>
+                    <div class="counter-val" id="cval-cm" style="color:var(--sys-blue)">0</div>
+                    <button class="c-btn c-plus" onclick="changeD('cm',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LUFFY HANDBALL LEFT -->
+        <div class="drill-card" style="border-color:rgba(239,68,68,0.3)">
+            <div class="drill-header">
+                <div>
+                    <div class="drill-anime" style="color:var(--sys-red)">Monkey D. Luffy</div>
+                    <div class="drill-name" style="color:var(--sys-red)">🔴 Bullet Handball — LEFT</div>
+                    <div class="drill-sub">Clean off the fist · flat · fast · pin-point</div>
+                </div>
+            </div>
+            <div class="diff-selector" id="diffs-hl">
+                <button class="diff-btn sel" style="background:var(--sys-green);border-color:var(--sys-green)" onclick="setDiff('hl',0,this)">BEGINNER<br><small style="font-size:6px">15 balls</small></button>
+                <button class="diff-btn" onclick="setDiff('hl',1,this)">RISING<br><small style="font-size:6px">25 balls</small></button>
+                <button class="diff-btn" onclick="setDiff('hl',2,this)">ELITE<br><small style="font-size:6px">40 balls</small></button>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill-hl" style="width:0%;background:var(--sys-red)"></div></div>
+            <div class="counter-row">
+                <div><div class="counter-target" id="ctgt-hl">TARGET: 15</div><button class="c-reset" onclick="resetD('hl')">RESET</button></div>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeD('hl',-1)">−</button>
+                    <div class="counter-val" id="cval-hl" style="color:var(--sys-red)">0</div>
+                    <button class="c-btn c-plus" onclick="changeD('hl',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LUFFY HANDBALL RIGHT -->
+        <div class="drill-card" style="border-color:rgba(239,68,68,0.3)">
+            <div class="drill-header">
+                <div>
+                    <div class="drill-anime" style="color:var(--sys-red)">Monkey D. Luffy</div>
+                    <div class="drill-name" style="color:var(--sys-red)">🔴 Bullet Handball — RIGHT</div>
+                    <div class="drill-sub">Clean off the fist · flat · fast · pin-point</div>
+                </div>
+            </div>
+            <div class="diff-selector" id="diffs-hr">
+                <button class="diff-btn sel" style="background:var(--sys-green);border-color:var(--sys-green)" onclick="setDiff('hr',0,this)">BEGINNER<br><small style="font-size:6px">15 balls</small></button>
+                <button class="diff-btn" onclick="setDiff('hr',1,this)">RISING<br><small style="font-size:6px">25 balls</small></button>
+                <button class="diff-btn" onclick="setDiff('hr',2,this)">ELITE<br><small style="font-size:6px">40 balls</small></button>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill-hr" style="width:0%;background:var(--sys-red)"></div></div>
+            <div class="counter-row">
+                <div><div class="counter-target" id="ctgt-hr">TARGET: 15</div><button class="c-reset" onclick="resetD('hr')">RESET</button></div>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeD('hr',-1)">−</button>
+                    <div class="counter-val" id="cval-hr" style="color:var(--sys-red)">0</div>
+                    <button class="c-btn c-plus" onclick="changeD('hr',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HEENEY GROUND BALL -->
+        <div class="drill-card" style="border-color:rgba(34,197,94,0.3)">
+            <div class="drill-header">
+                <div>
+                    <div class="drill-anime" style="color:var(--sys-green)">Isaac Heeney</div>
+                    <div class="drill-name" style="color:var(--sys-green)">🦅 Ground Ball Get + Kick</div>
+                    <div class="drill-sub">Low body scoop → instantly kick to a target. No pause.</div>
+                </div>
+            </div>
+            <div class="diff-selector" id="diffs-hg">
+                <button class="diff-btn sel" style="background:var(--sys-green);border-color:var(--sys-green)" onclick="setDiff('hg',0,this)">BEGINNER<br><small style="font-size:6px">8 reps</small></button>
+                <button class="diff-btn" onclick="setDiff('hg',1,this)">RISING<br><small style="font-size:6px">15 reps</small></button>
+                <button class="diff-btn" onclick="setDiff('hg',2,this)">ELITE<br><small style="font-size:6px">25 reps</small></button>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pfill-hg" style="width:0%;background:var(--sys-green)"></div></div>
+            <div class="counter-row">
+                <div><div class="counter-target" id="ctgt-hg">TARGET: 8</div><button class="c-reset" onclick="resetD('hg')">RESET</button></div>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeD('hg',-1)">−</button>
+                    <div class="counter-val" id="cval-hg" style="color:var(--sys-green)">0</div>
+                    <button class="c-btn c-plus" onclick="changeD('hg',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider">Stamina</div>
+        <!-- BEEP TEST -->
+        <div class="glass beep-card">
+            <div class="beep-title">◆ Grand Line Beep Test ◆</div>
+            <div class="beep-row">
+                <div class="beep-level">LEVEL: <span id="beep-lvl">—</span></div>
+                <button class="beep-btn" id="beep-btn" onclick="startBeep()">⬥ ENGAGE BEEP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SKILLS TAB (One Piece solo tracker) ============ -->
+    <div id="tab-skills" class="hidden">
+        <div class="section-title">◆ One Piece Skill Tree ◆</div>
+        <p style="text-align:center;font-size:10px;color:rgba(148,163,184,0.35);font-family:'Share Tech Mono',monospace;letter-spacing:1px;margin-bottom:16px;">SESSION REPS · LIFETIME TOTAL</p>
+
+        <!-- A-SKIPS -->
+        <div class="skill-solo" style="border-color:rgba(251,191,36,0.3)">
+            <div class="skill-solo-header">
+                <div class="skill-icon">⚡</div>
+                <div class="skill-solo-text">
+                    <div class="skill-solo-anime">Gear 2nd — Luffy</div>
+                    <div class="skill-solo-name">A-Skips & Piston Drill</div>
+                </div>
+                <div class="skill-total-box">
+                    <div class="skill-total-label">LIFETIME</div>
+                    <div class="skill-total-val" id="tot-askips">0</div>
+                </div>
+            </div>
+            <div class="skill-solo-desc">High knees, snap feet under hips. Explosive ground contact power. Each tap = 1 skip.</div>
+            <div class="counter-row" style="padding-top:0">
+                <button class="c-reset" onclick="resetSk('askips')">RESET SESSION</button>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeSk('askips',-1)">−</button>
+                    <div class="counter-val" id="scnt-askips" style="color:var(--sys-yellow)">0</div>
+                    <button class="c-btn c-plus" onclick="changeSk('askips',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WALL DRILLS -->
+        <div class="skill-solo" style="border-color:rgba(56,189,248,0.3)">
+            <div class="skill-solo-header">
+                <div class="skill-icon">🧱</div>
+                <div class="skill-solo-text">
+                    <div class="skill-solo-anime">Gear 3rd — Luffy</div>
+                    <div class="skill-solo-name">Wall Drills</div>
+                </div>
+                <div class="skill-total-box">
+                    <div class="skill-total-label">LIFETIME</div>
+                    <div class="skill-total-val" id="tot-wall">0</div>
+                </div>
+            </div>
+            <div class="skill-solo-desc">45° wall lean, fast mountain climbers. Locks in the acceleration launch angle.</div>
+            <div class="counter-row" style="padding-top:0">
+                <button class="c-reset" onclick="resetSk('wall')">RESET SESSION</button>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeSk('wall',-1)">−</button>
+                    <div class="counter-val" id="scnt-wall" style="color:var(--sys-blue)">0</div>
+                    <button class="c-btn c-plus" onclick="changeSk('wall',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- POGO JUMPS -->
+        <div class="skill-solo" style="border-color:rgba(34,197,94,0.3)">
+            <div class="skill-solo-header">
+                <div class="skill-icon">🦘</div>
+                <div class="skill-solo-text">
+                    <div class="skill-solo-anime">Spring-Spring Fruit</div>
+                    <div class="skill-solo-name">Pogo Jumps (The Springs)</div>
+                </div>
+                <div class="skill-total-box">
+                    <div class="skill-total-label">LIFETIME</div>
+                    <div class="skill-total-val" id="tot-pogo">0</div>
+                </div>
+            </div>
+            <div class="skill-solo-desc">Stiff legs. Ankles only. Minimal ground time. Build the elastic snap in your calves.</div>
+            <div class="counter-row" style="padding-top:0">
+                <button class="c-reset" onclick="resetSk('pogo')">RESET SESSION</button>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeSk('pogo',-1)">−</button>
+                    <div class="counter-val" id="scnt-pogo" style="color:var(--sys-green)">0</div>
+                    <button class="c-btn c-plus" onclick="changeSk('pogo',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BRAKE BEFORE BURST -->
+        <div class="skill-solo" style="border-color:rgba(239,68,68,0.3)">
+            <div class="skill-solo-header">
+                <div class="skill-icon">🛑</div>
+                <div class="skill-solo-text">
+                    <div class="skill-solo-anime">Soru — CP9</div>
+                    <div class="skill-solo-name">Brake Before Burst</div>
+                </div>
+                <div class="skill-total-box">
+                    <div class="skill-total-label">LIFETIME</div>
+                    <div class="skill-total-val" id="tot-brake">0</div>
+                </div>
+            </div>
+            <div class="skill-solo-desc">Sprint 10m, stutter-stop dead on the line, then explode straight back. AFL stop-start pattern.</div>
+            <div class="counter-row" style="padding-top:0">
+                <button class="c-reset" onclick="resetSk('brake')">RESET SESSION</button>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeSk('brake',-1)">−</button>
+                    <div class="counter-val" id="scnt-brake" style="color:var(--sys-red)">0</div>
+                    <button class="c-btn c-plus" onclick="changeSk('brake',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTY BRAIN -->
+        <div class="skill-solo" style="border-color:rgba(168,85,247,0.3)">
+            <div class="skill-solo-header">
+                <div class="skill-icon">🧠</div>
+                <div class="skill-solo-text">
+                    <div class="skill-solo-anime">Observation Haki</div>
+                    <div class="skill-solo-name">Footy Brain (Reaction)</div>
+                </div>
+                <div class="skill-total-box">
+                    <div class="skill-total-label">LIFETIME</div>
+                    <div class="skill-total-val" id="tot-brain">0</div>
+                </div>
+            </div>
+            <div class="skill-solo-desc">Sprint at coach. Coach points L/R at last second. React, dodge that direction instantly.</div>
+            <div class="counter-row" style="padding-top:0">
+                <button class="c-reset" onclick="resetSk('brain')">RESET SESSION</button>
+                <div class="counter-controls">
+                    <button class="c-btn c-minus" onclick="changeSk('brain',-1)">−</button>
+                    <div class="counter-val" id="scnt-brain" style="color:var(--sys-purple)">0</div>
+                    <button class="c-btn c-plus" onclick="changeSk('brain',1)">+</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ HISTORY TAB ============ -->
+    <div id="tab-history" class="hidden">
+        <div class="section-title">◆ System Logs ◆</div>
+        <div id="log-container"><div class="no-data">// NO DATA RECORDED //</div></div>
+    </div>
+
+    <!-- ============ ROSTER TAB ============ -->
+    <div id="tab-schedule" class="hidden">
+        <div class="section-title">◆ Fortnightly Roster ◆</div>
+        <div class="roster-card">
+            <div class="roster-day">
+                <div class="day-tag" style="color:var(--sys-blue)">MON</div>
+                <div><div class="day-title">Speed Quest</div><div class="day-sub">Wall Drills + Sprints + Brake/Burst</div></div>
+            </div>
+            <div class="roster-day">
+                <div class="day-tag" style="color:var(--sys-green)">TUE</div>
+                <div><div class="day-title">Skill Quest</div><div class="day-sub">Gulden Kicks L+R · Curnow Marks · Footy Brain</div></div>
+            </div>
+            <div class="roster-day">
+                <div class="day-tag" style="color:var(--sys-red)">WED</div>
+                <div><div class="day-title">Stamina Protocol</div><div class="day-sub">Beep Test Quest + Shuttle Runs</div></div>
+            </div>
+            <div class="roster-day">
+                <div class="day-tag" style="color:rgba(148,163,184,0.4)">THU</div>
+                <div><div class="day-title" style="color:rgba(148,163,184,0.4)">Passive Buff</div><div class="day-sub">REST DAY — Recovery is training</div></div>
+            </div>
+            <div class="roster-day">
+                <div class="day-tag" style="color:var(--sys-yellow)">FRI</div>
+                <div><div class="day-title">Jump Quest</div><div class="day-sub">Pogo Jumps + A-Skips + Heeney Ground Gets</div></div>
+            </div>
+            <div class="roster-day">
+                <div class="day-tag" style="color:rgba(148,163,184,0.4)">SAT</div>
+                <div><div class="day-title" style="color:rgba(148,163,184,0.4)">Passive Buff</div><div class="day-sub">REST DAY — Save energy for tomorrow</div></div>
+            </div>
+        </div>
+        <div class="game-day">
+            <div class="game-day-text">⚡ SUNDAY: THE ULTIMATE TRIAL ⚡</div>
+            <div class="game-day-sub">// MATCH DAY — EXECUTE THE SYSTEM //</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- BEEP MODAL -->
+<div class="modal-overlay hidden" id="beep-modal">
+    <div class="modal">
+        <div class="modal-title">BEEP TEST ACTIVE</div>
+        <div class="modal-level" id="modal-level">1.0</div>
+        <div class="modal-sub">RUN 20M → TOUCH LINE → RETURN</div>
+        <div class="shuttle-indicator" id="shuttle-dots"></div>
+        <div class="modal-progress"><div class="modal-progress-bar" id="modal-bar" style="width:0%"></div></div>
+        <button class="modal-close" onclick="stopBeep()">◎ END TEST — RECORD LEVEL</button>
+    </div>
+</div>
+
+<script>
+// ===== TAB =====
+const TAB_IDS=['training','skills','history','schedule'];
+const TAB_BTNS={training:'t',skills:'sk',history:'h',schedule:'s'};
+function showTab(tab){
+    TAB_IDS.forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+    document.getElementById('tab-'+tab).classList.remove('hidden');
+    Object.values(TAB_BTNS).forEach(b=>document.getElementById(b+'-btn').classList.remove('active'));
+    document.getElementById(TAB_BTNS[tab]+'-btn').classList.add('active');
+}
+
+// ===== DRILLS =====
+const DRILL_CFG={
+    gl:{targets:[10,20,30],color:'var(--sys-yellow)'},
+    gr:{targets:[10,20,30],color:'var(--sys-yellow)'},
+    cm:{targets:[10,20,30],color:'var(--sys-blue)'},
+    hl:{targets:[15,25,40],color:'var(--sys-red)'},
+    hr:{targets:[15,25,40],color:'var(--sys-red)'},
+    hg:{targets:[8,15,25], color:'var(--sys-green)'},
+};
+const DIFF_COLORS=['var(--sys-green)','var(--sys-yellow)','var(--sys-red)'];
+let DS={};
+Object.keys(DRILL_CFG).forEach(id=>{ DS[id]={count:0,diff:0}; });
+
+function setDiff(id,idx,btn){
+    DS[id]={count:0,diff:idx};
+    document.querySelectorAll('#diffs-'+id+' .diff-btn').forEach((b,i)=>{
+        b.classList.remove('sel'); b.style.background=''; b.style.borderColor=''; b.style.color='';
+    });
+    btn.classList.add('sel'); btn.style.background=DIFF_COLORS[idx]; btn.style.borderColor=DIFF_COLORS[idx]; btn.style.color='#020617';
+    updateDUI(id);
+}
+function changeD(id,d){
+    const tgt=DRILL_CFG[id].targets[DS[id].diff];
+    DS[id].count=Math.max(0,Math.min(tgt,DS[id].count+d));
+    updateDUI(id);
+    if(DS[id].count===tgt){ const el=document.getElementById('cval-'+id); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+}
+function resetD(id){ DS[id].count=0; updateDUI(id); }
+function updateDUI(id){
+    const {count,diff}=DS[id]; const tgt=DRILL_CFG[id].targets[diff];
+    document.getElementById('cval-'+id).textContent=count;
+    document.getElementById('ctgt-'+id).textContent='TARGET: '+tgt;
+    document.getElementById('pfill-'+id).style.width=(Math.min(count/tgt,1)*100)+'%';
+}
+
+// ===== SKILLS =====
+const SKILL_IDS=['askips','wall','pogo','brake','brain'];
+let SK={};
+SKILL_IDS.forEach(id=>{ SK[id]={session:0,lifetime:0}; });
+function changeSk(id,d){
+    SK[id].session=Math.max(0,SK[id].session+d);
+    if(d>0) SK[id].lifetime+=d;
+    document.getElementById('scnt-'+id).textContent=SK[id].session;
+    document.getElementById('tot-'+id).textContent=SK[id].lifetime;
+}
+function resetSk(id){ SK[id].session=0; document.getElementById('scnt-'+id).textContent=0; }
+
+// ===== SPRINT =====
+const btn=document.getElementById('action-btn'),saveBtn=document.getElementById('save-btn'),
+      timerEl=document.getElementById('timer'),windowEl=document.getElementById('main-window'),
+      gearEl=document.getElementById('gear-label');
+let state='IDLE',startTime,timerInterval,lastTime,history=[];
+
+btn.addEventListener('click',()=>{
+    if(state==='IDLE'){
+        state='WAIT'; btn.textContent='◎ FOCUSING...'; btn.className='action-btn waiting';
+        saveBtn.classList.add('hidden'); gearEl.textContent='◈ PREPARING... ◈'; windowEl.classList.remove('gear-2nd','gear-4th');
+        setTimeout(()=>{
+            if(state==='WAIT'){
+                state='RUN'; btn.textContent='⬛ FINISH!'; btn.className='action-btn running';
+                gearEl.textContent='▶ RUNNING ▶'; timerEl.classList.add('running');
+                startTime=Date.now();
+                timerInterval=setInterval(()=>{ timerEl.textContent=((Date.now()-startTime)/1000).toFixed(2); },10);
+            }
+        },Math.random()*3000+1500);
+    } else if(state==='WAIT'){
+        state='IDLE'; btn.textContent='⚡ Initialize Burst'; btn.className='action-btn'; gearEl.textContent='◈ BASE FORM ◈';
+    } else if(state==='RUN'){
+        clearInterval(timerInterval); lastTime=parseFloat(timerEl.textContent);
+        state='IDLE'; timerEl.classList.remove('running'); btn.textContent='⚡ RETRY'; btn.className='action-btn'; saveBtn.classList.remove('hidden');
+        windowEl.classList.remove('gear-2nd','gear-4th');
+        if(lastTime<=3.65){ windowEl.classList.add('gear-4th'); gearEl.textContent='⚡ GEAR 4TH: SNAKEMAN — GOD SPEED ⚡'; playGear2Sound(); }
+        else if(lastTime<=3.85){ windowEl.classList.add('gear-2nd'); gearEl.textContent='🔥 GEAR 2ND — ELITE TERRITORY 🔥'; playGear2Sound(); }
+        else { gearEl.textContent='◈ BASE FORM ◈'; }
+    }
+});
+
+function playGear2Sound(){
+    try{ const a=new Audio('https://www.myinstants.com/media/sounds/gear-second.mp3'); a.volume=0.85; a.play().catch(()=>{}); }catch(e){}
+}
+
+saveBtn.addEventListener('click',()=>{
+    history.unshift({time:lastTime,id:history.length+1});
+    if(history.length>10)history.pop();
+    renderHistory(); saveBtn.classList.add('hidden');
+    document.getElementById('pb-display').textContent=Math.min(...history.map(h=>h.time)).toFixed(2)+'s';
+});
+
+function getGearLabel(t){ if(t<=3.65)return'GEAR 4TH'; if(t<=3.85)return'GEAR 2ND'; return'BASE'; }
+function renderHistory(){
+    const c=document.getElementById('log-container');
+    if(!history.length){c.innerHTML='<div class="no-data">// NO DATA RECORDED //</div>';return;}
+    const min=Math.min(...history.map(h=>h.time));
+    c.innerHTML=history.map((h,i)=>{
+        const isPB=h.time===min;
+        return`<div class="log-item ${isPB?'gold':''}">
+            <div><div class="trial-name">TRIAL #${history.length-i}</div><div class="trial-gear">${getGearLabel(h.time)}${isPB?' · PERSONAL BEST':''}</div></div>
+            <div class="trial-time ${isPB?'gold':''}">${h.time.toFixed(2)}s</div>
+        </div>`;
+    }).join('');
+}
+
+// ===== BEEP =====
+let beepLevel=1.0,shuttleCount=0,shuttleMax=7,progInt=null;
+function startBeep(){
+    if(progInt)return; beepLevel=1.0; shuttleCount=0;
+    document.getElementById('modal-level').textContent=beepLevel.toFixed(1);
+    document.getElementById('beep-lvl').textContent=beepLevel.toFixed(1);
+    document.getElementById('beep-modal').classList.remove('hidden');
+    document.getElementById('beep-btn').classList.add('active-beep');
+    document.getElementById('beep-btn').textContent='▶ ACTIVE';
+    renderDots(shuttleMax,0); startProg();
+}
+function getMs(l){return Math.max(2500,9000-(l-1)*500);}
+function startProg(){
+    const ms=getMs(beepLevel); let el=0;
+    document.getElementById('modal-bar').style.width='0%';
+    progInt=setInterval(()=>{
+        el+=50; document.getElementById('modal-bar').style.width=Math.min((el/ms)*100,100)+'%';
+        if(el>=ms){
+            clearInterval(progInt); shuttleCount++;
+            const lvlS=Math.floor(beepLevel)+6;
+            if(shuttleCount>=lvlS){ shuttleCount=0; beepLevel=parseFloat((beepLevel+0.1).toFixed(1)); shuttleMax=Math.floor(beepLevel)+6; document.getElementById('modal-level').textContent=beepLevel.toFixed(1); document.getElementById('beep-lvl').textContent=beepLevel.toFixed(1); }
+            renderDots(shuttleMax,shuttleCount); playBeep(); startProg();
+        }
+    },50);
+}
+function renderDots(t,d){ document.getElementById('shuttle-dots').innerHTML=Array.from({length:Math.min(t,10)},(_,i)=>`<div class="shuttle-dot ${i<d?'active':''}"></div>`).join(''); }
+function playBeep(){
+    try{ const ctx=new(window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination); o.frequency.value=880; o.type='sine';
+    g.gain.setValueAtTime(0.3,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.15);
+    o.start(ctx.currentTime); o.stop(ctx.currentTime+0.15); }catch(e){}
+}
+function stopBeep(){
+    if(progInt)clearInterval(progInt); progInt=null;
+    document.getElementById('beep-modal').classList.add('hidden');
+    document.getElementById('beep-btn').classList.remove('active-beep');
+    document.getElementById('beep-btn').textContent='⬥ ENGAGE BEEP';
+}
+
+// ===== LIGHTNING CANVAS =====
+(function(){
+    const canvas = document.getElementById('lightning-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    // Color palettes: blue (system), red/orange (Gear 2nd), purple (Gear 4th)
+    const PALETTES = [
+        ['#38bdf8','#0ea5e9','#7dd3fc','#bae6fd'],  // blue
+        ['#ef4444','#fb923c','#fbbf24','#f97316'],  // red/orange
+        ['#a855f7','#c084fc','#7c3aed','#e879f9'],  // purple
+    ];
+
+    class Bolt {
+        constructor(){this.reset();}
+        reset(){
+            const pal = PALETTES[Math.floor(Math.random()*PALETTES.length)];
+            this.color = pal[Math.floor(Math.random()*pal.length)];
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height * 0.6;
+            this.life = 0;
+            this.maxLife = 6 + Math.floor(Math.random()*10);
+            this.branches = this.buildBolt(this.x, this.y, 80+Math.random()*160, (Math.PI/2)+(Math.random()-0.5)*0.8, 4);
+            this.alpha = 0.6 + Math.random()*0.4;
+            this.width = 0.5 + Math.random()*1.5;
+            this.glowColor = this.color;
+        }
+        buildBolt(x,y,len,angle,depth){
+            if(depth===0||len<8) return [];
+            const segs=[];
+            let cx=x,cy=y,remaining=len;
+            while(remaining>0){
+                const segLen = 8+Math.random()*22;
+                const bend = (Math.random()-0.5)*1.2;
+                const nx = cx + Math.cos(angle+bend)*Math.min(segLen,remaining);
+                const ny = cy + Math.sin(angle+bend)*Math.min(segLen,remaining);
+                segs.push({x1:cx,y1:cy,x2:nx,y2:ny});
+                if(Math.random()<0.35 && depth>1){
+                    const branchAngle = angle + (Math.random()-0.5)*1.8;
+                    segs.push(...this.buildBolt(nx,ny,remaining*0.45,branchAngle,depth-1));
+                }
+                cx=nx; cy=ny; remaining-=segLen;
+            }
+            return segs;
+        }
+        draw(){
+            const a = this.alpha * (1 - this.life/this.maxLife);
+            ctx.save();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = this.width;
+            ctx.shadowColor = this.glowColor;
+            ctx.shadowBlur = 12;
+            ctx.globalAlpha = a;
+            ctx.beginPath();
+            for(const s of this.branches){
+                ctx.moveTo(s.x1,s.y1); ctx.lineTo(s.x2,s.y2);
+            }
+            ctx.stroke();
+            // bright core
+            ctx.shadowBlur = 4;
+            ctx.lineWidth = this.width*0.4;
+            ctx.strokeStyle = '#ffffff';
+            ctx.globalAlpha = a*0.5;
+            ctx.beginPath();
+            for(const s of this.branches){
+                ctx.moveTo(s.x1,s.y1); ctx.lineTo(s.x2,s.y2);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+    // Floating energy orbs
+    class Orb {
+        constructor(){this.reset();}
+        reset(){
+            const pal = PALETTES[Math.floor(Math.random()*PALETTES.length)];
+            this.color = pal[0];
+            this.x = Math.random()*canvas.width;
+            this.y = Math.random()*canvas.height;
+            this.r = 1+Math.random()*3;
+            this.vx = (Math.random()-0.5)*0.4;
+            this.vy = -0.1-Math.random()*0.3;
+            this.life = 0;
+            this.maxLife = 80+Math.random()*120;
+        }
+        update(){ this.x+=this.vx; this.y+=this.vy; this.life++; if(this.life>this.maxLife)this.reset(); }
+        draw(){
+            const a = Math.sin((this.life/this.maxLife)*Math.PI)*0.6;
+            ctx.save();
+            ctx.globalAlpha = a;
+            ctx.shadowColor = this.color;
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    const bolts = [];
+    const orbs = Array.from({length:30},()=>new Orb());
+    let frame = 0;
+
+    function spawnBolt(){
+        if(bolts.length < 6 && Math.random() < 0.04){
+            bolts.push(new Bolt());
+        }
+    }
+
+    function animate(){
+        requestAnimationFrame(animate);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        // dim overlay for depth
+        ctx.fillStyle='rgba(2,6,23,0.15)';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        // orbs
+        for(const o of orbs){ o.update(); o.draw(); }
+
+        // bolts
+        spawnBolt();
+        for(let i=bolts.length-1;i>=0;i--){
+            bolts[i].draw();
+            bolts[i].life++;
+            if(bolts[i].life>bolts[i].maxLife) bolts.splice(i,1);
+        }
+
+        frame++;
+    }
+    animate();
+})();
+
+</script>
+</body>
 </html>
